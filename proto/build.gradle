@@ -1,0 +1,50 @@
+buildscript {
+    ext {
+        protobufPluginVersion = '0.8.6'
+        grpcVersion = '1.23.0'
+        protocVersion = '3.2.0'
+    }
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.google.protobuf:protobuf-gradle-plugin:$protobufPluginVersion"
+    }
+
+}
+
+apply plugin: 'java'
+apply plugin: 'com.google.protobuf'
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation "io.grpc:grpc-netty:$grpcVersion"
+    implementation "io.grpc:grpc-protobuf:$grpcVersion"
+    implementation "io.grpc:grpc-stub:$grpcVersion"
+}
+
+protobuf {
+
+    generatedFilesBaseDir = "$projectDir/src"
+
+    protoc {
+        artifact = "com.google.protobuf:protoc:$protocVersion"
+    }
+
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {
+                outputSubDir = 'java'
+            }
+        }
+    }
+}

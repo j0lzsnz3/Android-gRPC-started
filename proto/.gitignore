@@ -1,0 +1,3 @@
+/build
+src/main/java/*
+src/main/java/com/modana/proto/lender/*.java
