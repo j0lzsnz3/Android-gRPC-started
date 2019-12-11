@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // ************** Unary Call *********** //
     private fun getUnaryResponseFromServer(input: String) {
         val messageResponse: MessengerProto.MessageResponse?
         val blockingStub = MessengerGrpc.newBlockingStub(GrpcUtils.getChannelLocal())
@@ -40,17 +41,17 @@ class MainActivity : AppCompatActivity() {
 
         tvServerResponse.text = messageResponse.text
     }
+    // ************** ********* *********** //
 
+    // **************** Client Stream Call ***************//
     private fun getClientStreamResponse(input: String) {
-        val greetingResponse = handleResponseStreamObserver()
-
         val asyncStub = GreetingServiceGrpc.newStub(GrpcUtils.getChannelLocalSpring())
 
         val request = GreetingServiceOuterClass.HelloRequest.newBuilder()
             .setName(input)
             .build()
 
-        asyncStub.greetingWithResponseStream(request, greetingResponse)
+        asyncStub.greetingWithResponseStream(request, handleResponseStreamObserver())
     }
 
     private fun handleResponseStreamObserver(): StreamObserver<GreetingServiceOuterClass.HelloResponse> =
@@ -65,8 +66,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onCompleted() {
-                tvServerResponse.text = ""
-                tvServerResponse.text = stringBuilder.replaceFirst(Regex(" / "), "\n")
+                tvServerResponse.text = stringBuilder.replace(Regex(" / "), "\n")
             }
         }
+    // **************** ***************** ***************//
 }
